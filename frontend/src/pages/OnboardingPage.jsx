@@ -15,6 +15,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [ageGroup, setAgeGroup] = useState(null);
   const [travelerType, setTravelerType] = useState(null);
+  const [styles, setStyles] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 

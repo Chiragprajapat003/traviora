@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
-import { ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { User, ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import SafetyConsole from '../components/SafetyConsole';
 
 function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
+  const navigate = useNavigate();
   const links = [
     { id: 'dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
     { id: 'map', icon: <Map size={20} />, label: 'Safety Map', to: '/safety-map' },
@@ -29,6 +30,24 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
     violet: 'bg-violet-500',
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  };
+
+  const getUserName = () => {
+    try {
+      const user = localStorage.getItem('user');
+      if (!user) return 'Explorer';
+      const parsed = JSON.parse(user);
+      return typeof parsed === 'object' ? parsed.name : parsed;
+    } catch (e) {
+      return localStorage.getItem('user') || 'Explorer';
+    }
+  };
+
+  const userName = getUserName();
+
   return (
     <div className="hidden md:flex flex-col fixed left-0 top-16 bottom-0 w-64 bg-[#050b14] border-r border-slate-800/60 z-40 overflow-y-auto">
       <div className="p-6 mb-2">
@@ -37,14 +56,12 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
             <ShieldCheck size={24} className="text-white" />
           </div>
           <div>
-            <div className="text-white font-bold text-lg tracking-tight">TRAVIORA AI</div>
+            <div className="text-white font-bold text-lg tracking-tight uppercase">{userName}</div>
             <div className="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Hub Connected
             </div>
           </div>
         </div>
-
-
       </div>
 
       <div className="flex-1 px-3 flex flex-col gap-1">
@@ -92,10 +109,16 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
         >
           <AlertTriangle size={18} /> SOS EMERGENCY
         </button>
-        <button className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 transition-colors w-full text-sm font-bold">
-          <Info size={18} /> Help
+        <button 
+          onClick={() => navigate('/profile')}
+          className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 transition-colors w-full text-sm font-bold"
+        >
+          <User size={18} /> My Profile
         </button>
-        <button className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-rose-500 transition-colors w-full text-sm font-bold">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-rose-500 transition-colors w-full text-sm font-bold"
+        >
           <ArrowRight size={18} /> Logout
         </button>
       </div>
