@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import Logo from '../components/Logo';
 import { ageGroups, travelerTypes, travelStyles, STEP_BACKGROUNDS, TOTAL_STEPS } from '../data/onboardingData';
 import StepBar from '../components/onboarding/StepBar';
@@ -9,12 +9,13 @@ import StepAgeGroup from '../components/onboarding/StepAgeGroup';
 import StepWhoTravels from '../components/onboarding/StepWhoTravels';
 import StepStyle from '../components/onboarding/StepStyle';
 import StepDone from '../components/onboarding/StepDone';
+import API from '../utils/api';
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [ageGroup, setAgeGroup] = useState(null);
   const [travelerType, setTravelerType] = useState(null);
-  const [styles, setStyles] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const toggleStyle = (id) =>
@@ -26,19 +27,38 @@ export default function OnboardingPage() {
     (step === 2 && styles.length > 0) ||
     step === 3;
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (step < TOTAL_STEPS - 1) {
       setStep((s) => s + 1);
     } else {
-      // Persist traveler type for routing and theme purposes
-      localStorage.setItem('travelerType', travelerType);
-      
-      if (travelerType === 'women') {
-        navigate('/womens-hub');
-      } else if (travelerType === 'family') {
-        navigate('/family-hub');
-      } else {
-        navigate('/mens-hub');
+      setLoading(true);
+      try {
+        // Map style IDs to labels if needed, or just send IDs
+        const selectedStyles = styles.map(id => travelStyles.find(s => s.id === id)?.label || id);
+        
+        await API.put('/auth/profile', {
+          ageGroup: ageGroups[ageGroup].label,
+          travelerType,
+          travelStyles: selectedStyles,
+        });
+
+        // Persist traveler type for routing and theme purposes
+        localStorage.setItem('travelerType', travelerType);
+        
+        if (travelerType === 'women') {
+          navigate('/womens-hub');
+        } else if (travelerType === 'family') {
+          navigate('/family-hub');
+        } else {
+          navigate('/mens-hub');
+        }
+      } catch (error) {
+        console.error('Failed to save onboarding data:', error);
+        // Fallback to local storage and navigate anyway so user isn't stuck
+        localStorage.setItem('travelerType', travelerType);
+        navigate(travelerType === 'women' ? '/womens-hub' : travelerType === 'family' ? '/family-hub' : '/mens-hub');
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -114,21 +134,27 @@ export default function OnboardingPage() {
 
           {/* Continue button */}
           <motion.button
-            whileHover={canContinue ? { scale: 1.02, y: -1 } : {}}
-            whileTap={canContinue ? { scale: 0.98 } : {}}
+            whileHover={canContinue && !loading ? { scale: 1.02, y: -1 } : {}}
+            whileTap={canContinue && !loading ? { scale: 0.98 } : {}}
             onClick={handleContinue}
-            disabled={!canContinue}
+            disabled={!canContinue || loading}
             className={`w-full mt-4 flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-semibold text-sm transition-all duration-300 cursor-pointer relative overflow-hidden group
-              ${canContinue
+              ${canContinue && !loading
                 ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-xl shadow-sky-500/25 hover:shadow-sky-500/40'
                 : 'bg-white/5 text-slate-600 border border-white/8 cursor-not-allowed'}
             `}
           >
-            {canContinue && (
+            {canContinue && !loading && (
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             )}
-            {step === TOTAL_STEPS - 1 ? 'Start Exploring ✨' : 'Continue'}
-            <ArrowRight size={16} />
+            {loading ? (
+              <Loader2 className="animate-spin" size={18} />
+            ) : (
+              <>
+                {step === TOTAL_STEPS - 1 ? 'Start Exploring ✨' : 'Continue'}
+                <ArrowRight size={16} />
+              </>
+            )}
           </motion.button>
 
           {/* Back button */}
