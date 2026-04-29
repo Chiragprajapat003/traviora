@@ -33,11 +33,12 @@ export default function OnboardingPage() {
     } else {
       setLoading(true);
       try {
-        // Map style IDs to labels if needed, or just send IDs
+        // Find labels based on IDs
+        const selectedAgeGroup = ageGroups.find(g => g.id === ageGroup)?.label || ageGroup;
         const selectedStyles = styles.map(id => travelStyles.find(s => s.id === id)?.label || id);
         
         await API.put('/auth/profile', {
-          ageGroup: ageGroups[ageGroup].label,
+          ageGroup: selectedAgeGroup,
           travelerType,
           travelStyles: selectedStyles,
         });
