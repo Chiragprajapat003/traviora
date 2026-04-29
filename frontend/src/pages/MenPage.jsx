@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, Zap, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import SafetyConsole from '../components/SafetyConsole';
 
 function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
   const links = [
@@ -108,8 +109,7 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
   );
 }
 
-import React, { useState, useEffect } from 'react';
-import SafetyConsole from '../components/SafetyConsole';
+
 
 function MenDashboard() {
   return (
