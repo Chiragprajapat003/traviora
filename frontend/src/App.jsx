@@ -82,7 +82,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/get-started" element={<AuthPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="/destinations" element={<MenPage />} />
+            <Route path="/mens-hub" element={<MenPage />} />
             <Route path="/safety" element={<SafetyPage />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/pricing" element={<PricingPage />} />
