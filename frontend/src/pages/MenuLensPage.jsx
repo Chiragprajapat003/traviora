@@ -142,7 +142,7 @@ export default function MenuLensPage() {
               <div className="aspect-[3/4] bg-slate-900 rounded-[2.5rem] border-8 border-slate-800 overflow-hidden relative shadow-2xl">
                 {/* Camera View Mockup */}
                 <img 
-                  src="https://images.unsplash.com/photo-1550966841-391ad55a0006?q=80&w=2070&auto=format&fit=crop" 
+                  src="https://images.unsplash.com/photo-1550966841-391ad55a0006?auto=format&fit=crop&w=800&q=80" 
                   alt="Menu Mockup" 
                   className={`w-full h-full object-cover transition-all duration-700 ${isScanning ? 'brightness-50 grayscale' : 'brightness-75'}`}
                 />

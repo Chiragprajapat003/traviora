@@ -30,7 +30,7 @@ function Sidebar() {
       <div className="p-6 border-b border-slate-800/50">
         <div className="flex items-center gap-3">
           <img 
-            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop" 
             alt="Profile" 
             className="w-10 h-10 rounded-full border border-slate-700 object-cover"
           />
