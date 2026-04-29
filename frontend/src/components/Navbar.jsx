@@ -48,9 +48,9 @@ export default function Navbar() {
             <Shield size={20} className="group-hover:scale-110 transition-transform" />
             <span className="text-[10px] font-bold text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">SOS</span>
           </button>
-          <button className="rounded-full overflow-hidden ring-2 ring-transparent hover:ring-slate-700 transition-all w-8 h-8 cursor-pointer">
+          <Link to="/profile" className="rounded-full overflow-hidden ring-2 ring-transparent hover:ring-slate-700 transition-all w-8 h-8 cursor-pointer">
             <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" alt="User Avatar" className="w-full h-full object-cover" />
-          </button>
+          </Link>
         </div>
       </nav>
     );
@@ -92,6 +92,7 @@ export default function Navbar() {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/profile')}
               className="w-9 h-9 rounded-full glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               <User size={16} />

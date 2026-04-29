@@ -19,6 +19,8 @@ import MediTrustPage from './pages/MediTrustPage';
 import DoctorProfilePage from './pages/DoctorProfilePage';
 import MenuLensPage from './pages/MenuLensPage';
 import LocalVibePage from './pages/LocalVibePage';
+import TripPlannerPage from './pages/TripPlannerPage';
+import ProfilePage from './pages/ProfilePage';
 
 // Landing page (Home)
 function HomePage() {
@@ -98,6 +100,8 @@ export default function App() {
             <Route path="/meditrust/doctor/:id" element={<DoctorProfilePage />} />
             <Route path="/menulens" element={<MenuLensPage />} />
             <Route path="/localvibe" element={<LocalVibePage />} />
+            <Route path="/trip-planner" element={<TripPlannerPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/mens-hub" element={<MenPage />} />
             <Route path="/womens-hub" element={<WomenPage />} />
             <Route path="/family-hub" element={<FamilyPage />} />

@@ -15,6 +15,7 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
     { id: 'archive', icon: <Bookmark size={20} />, label: 'Archive' },
     { id: 'meditrust', icon: <PlusSquare size={20} />, label: 'MediTrust', to: '/meditrust' },
     { id: 'powerspot', icon: <Compass size={20} />, label: 'PowerSpot', to: '/powerspot' },
+    { id: 'planner', icon: <Calendar size={20} />, label: 'Trip Planner', to: '/trip-planner' },
   ];
 
   const activeColors = {
