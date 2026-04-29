@@ -49,7 +49,11 @@ export default function Navbar() {
             <span className="text-[10px] font-bold text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">SOS</span>
           </button>
           <Link to="/profile" className="rounded-full overflow-hidden ring-2 ring-transparent hover:ring-slate-700 transition-all w-8 h-8 cursor-pointer">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" alt="User Avatar" className="w-full h-full object-cover" />
+            <img 
+              src={JSON.parse(localStorage.getItem('user'))?.profilePicture || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop"} 
+              alt="User Avatar" 
+              className="w-full h-full object-cover" 
+            />
           </Link>
         </div>
       </nav>
@@ -81,22 +85,40 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-3">
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => navigate('/get-started')}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-sm font-semibold shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition-all duration-300 cursor-pointer"
-            >
-              Start Adventure
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/profile')}
-              className="w-9 h-9 rounded-full glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
-            >
-              <User size={16} />
-            </motion.button>
+            {!localStorage.getItem('token') ? (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate('/get-started')}
+                className="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-sm font-semibold shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition-all duration-300 cursor-pointer"
+              >
+                Start Adventure
+              </motion.button>
+            ) : (
+              <div className="flex items-center gap-4">
+                <span className="text-slate-400 text-sm font-medium">
+                  Hi, {(() => {
+                    try {
+                      const user = localStorage.getItem('user');
+                      if (!user) return 'Explorer';
+                      const parsed = JSON.parse(user);
+                      const name = typeof parsed === 'object' ? parsed.name : parsed;
+                      return name.split(' ')[0];
+                    } catch (e) {
+                      return (localStorage.getItem('user') || 'Explorer').split(' ')[0];
+                    }
+                  })()}
+                </span>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/profile')}
+                  className="w-9 h-9 rounded-full glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  <User size={16} />
+                </motion.button>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}

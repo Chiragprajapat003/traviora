@@ -1,49 +1,101 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Settings, Shield, Bell, CreditCard, LogOut, 
   MapPin, Globe, Award, Heart, CheckCircle, ChevronRight,
-  Camera, Mail, Phone, Lock, Eye, EyeOff
+  Camera, Mail, Phone, Lock, Eye, EyeOff, Loader2, Upload
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import API from '../utils/api';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const travelerType = localStorage.getItem('travelerType') || 'men';
+  const fileInputRef = useRef(null);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', profilePicture: '' });
 
-  const getProfileData = () => {
-    if (travelerType === 'women') {
-      return {
-        name: "Elena Rostova",
-        handle: "@elena_travels",
-        tier: "Safe Traveler Gold",
-        color: "text-pink-400",
-        border: "border-pink-500/30",
-        bg: "bg-pink-500/5"
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Image is too large! Please choose a file smaller than 2MB.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({ ...editForm, profilePicture: reader.result });
+        setIsEditing(true);
       };
-    } else if (travelerType === 'family') {
-      return {
-        name: "The Miller Family",
-        handle: "@miller_adventures",
-        tier: "Safe Family Platinum",
-        color: "text-emerald-400",
-        border: "border-emerald-500/30",
-        bg: "bg-emerald-500/5"
-      };
-    } else {
-      return {
-        name: "Marcus Chen",
-        handle: "@marcus_vibe",
-        tier: "Safe Traveler Premium",
-        color: "text-blue-400",
-        border: "border-blue-500/30",
-        bg: "bg-blue-500/5"
-      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const profile = getProfileData();
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const { data } = await API.get('/auth/profile');
+        setUserData(data);
+        setEditForm({ name: data.name, profilePicture: data.profilePicture });
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+        if (error.response?.status === 401) {
+          navigate('/get-started');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]);
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const { data } = await API.put('/auth/profile', {
+        name: editForm.name,
+        profilePicture: editForm.profilePicture
+      });
+      setUserData(data);
+      // Update local storage name too
+      const user = JSON.parse(localStorage.getItem('user'));
+      localStorage.setItem('user', JSON.stringify({ ...user, name: data.name, profilePicture: data.profilePicture }));
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      alert('Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
+
+  if (loading && !userData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#020817]">
+        <Loader2 className="text-emerald-500 animate-spin" size={40} />
+      </div>
+    );
+  }
+
+  const profile = {
+    name: userData?.name || "Guest Traveler",
+    email: userData?.email || "No email provided",
+    photo: userData?.profilePicture || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop",
+    handle: `@${userData?.name?.toLowerCase().replace(/\s/g, '_') || 'traveler'}`,
+    type: userData?.profile?.travelerType || 'Solo',
+    tier: "Safe Traveler Gold", // Can be dynamic later
+    color: userData?.profile?.travelerType === 'women' ? "text-pink-400" : userData?.profile?.travelerType === 'family' ? "text-emerald-400" : "text-blue-400",
+    border: userData?.profile?.travelerType === 'women' ? "border-pink-500/30" : userData?.profile?.travelerType === 'family' ? "border-emerald-500/30" : "border-blue-500/30",
+    bg: userData?.profile?.travelerType === 'women' ? "bg-pink-500/5" : userData?.profile?.travelerType === 'family' ? "bg-emerald-500/5" : "bg-blue-500/5"
+  };
 
   const stats = [
     { label: "Destinations", value: "12", icon: <Globe size={18} /> },
@@ -68,35 +120,114 @@ export default function ProfilePage() {
             animate={{ opacity: 1, y: 0 }}
             className="lg:col-span-1 bg-[#151822] border border-slate-800 rounded-[2.5rem] p-8 text-center"
           >
-            <div className="relative inline-block mb-6">
-              <div className={`w-32 h-32 rounded-full border-4 ${profile.border} p-1`}>
+            {/* Avatar Section */}
+            <div className="relative mx-auto w-32 h-32 mb-8 group">
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              <div className={`w-full h-full rounded-full border-2 ${profile.border} p-1 overflow-hidden bg-slate-900/50 flex items-center justify-center transition-all duration-500 group-hover:border-emerald-500/50`}>
                 <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop" 
+                  src={isEditing ? editForm.profilePicture : profile.photo} 
                   alt="Profile" 
-                  className="w-full h-full rounded-full object-cover shadow-2xl"
+                  className="w-full h-full object-cover rounded-full shadow-inner"
                 />
               </div>
-              <button className="absolute bottom-1 right-1 w-10 h-10 bg-emerald-500 hover:bg-emerald-400 text-slate-900 rounded-full flex items-center justify-center border-4 border-[#151822] transition-colors">
+              <button 
+                onClick={() => fileInputRef.current.click()}
+                className="absolute bottom-1 right-1 w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white border-4 border-[#151822] hover:scale-110 hover:bg-emerald-400 transition-all cursor-pointer shadow-lg z-20"
+                title="Upload from computer"
+              >
                 <Camera size={18} />
               </button>
             </div>
-            
-            <h1 className="text-2xl font-bold text-white mb-1">{profile.name}</h1>
-            <p className="text-slate-500 text-sm mb-4">{profile.handle}</p>
-            
-            <div className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full ${profile.bg} ${profile.color} text-xs font-bold border ${profile.border} mb-8`}>
-              <Award size={14} /> {profile.tier}
+
+            {/* Name & Title */}
+            <div className="text-center mb-10">
+              {isEditing ? (
+                <div className="flex flex-col gap-4 max-w-[280px] mx-auto">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={editForm.name}
+                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-center font-bold text-lg outline-none focus:border-emerald-500/50 focus:bg-white/[0.08] transition-all"
+                      placeholder="Your Name"
+                    />
+                    <div className="absolute -top-2 left-4 px-2 bg-[#151822] text-[10px] text-slate-500 font-bold uppercase tracking-wider">Name</div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <button 
+                      onClick={() => fileInputRef.current.click()}
+                      className="w-full py-2 bg-white/5 border border-white/10 rounded-xl text-slate-300 text-xs font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-all"
+                    >
+                      <Upload size={14} /> Upload from PC
+                    </button>
+                    <div className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">— OR —</div>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={editForm.profilePicture}
+                        onChange={(e) => setEditForm({ ...editForm, profilePicture: e.target.value })}
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 text-slate-400 text-center text-[10px] outline-none focus:border-emerald-500/50 focus:bg-white/[0.08] transition-all"
+                        placeholder="Paste Image URL"
+                      />
+                      <div className="absolute -top-2 left-4 px-2 bg-[#151822] text-[10px] text-slate-500 font-bold uppercase tracking-wider">Photo URL</div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-bold text-white mb-1 tracking-tight">{profile.name}</h2>
+                  <p className="text-slate-500 text-sm font-medium mb-5">{profile.handle}</p>
+                </>
+              )}
+              
+              {!isEditing && (
+                <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full border ${profile.border} ${profile.bg} ${profile.color} text-[11px] font-bold uppercase tracking-wider shadow-sm`}>
+                  <Award size={14} /> {profile.tier}
+                </div>
+              )}
             </div>
 
-            <div className="space-y-3">
-              <button className="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/10">
-                Edit Profile
-              </button>
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-4">
+              {isEditing ? (
+                <div className="flex gap-3">
+                  <button 
+                    onClick={handleSave}
+                    disabled={loading}
+                    className="flex-[2] py-4 bg-emerald-500 hover:bg-emerald-400 text-[#020817] font-bold rounded-2xl transition-all shadow-xl shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    {loading ? <Loader2 className="animate-spin" size={20} /> : 'Save Changes'}
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setIsEditing(false);
+                      setEditForm({ name: userData.name, profilePicture: userData.profilePicture });
+                    }}
+                    className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-slate-400 font-bold rounded-2xl transition-all border border-white/5"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setIsEditing(true)}
+                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-[#020817] font-bold rounded-2xl transition-all shadow-xl shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2"
+                >
+                  Edit Profile
+                </button>
+              )}
               <button 
-                onClick={() => navigate('/')}
-                className="w-full py-3 bg-transparent border border-slate-800 hover:border-slate-700 text-slate-400 font-bold rounded-xl transition-all flex items-center justify-center gap-2"
+                onClick={handleLogout}
+                className="w-full py-4 bg-transparent border border-slate-800 hover:border-slate-700 hover:bg-white/[0.02] text-slate-500 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 group"
               >
-                <LogOut size={18} /> Logout
+                <LogOut size={18} className="group-hover:text-rose-500 transition-colors" /> Logout
               </button>
             </div>
           </motion.div>
@@ -139,7 +270,7 @@ export default function ProfilePage() {
                       </div>
                       <div>
                         <p className="text-white font-bold text-sm">Email Address</p>
-                        <p className="text-slate-500 text-xs">m.chen@example.com</p>
+                        <p className="text-slate-500 text-xs">{profile.email}</p>
                       </div>
                     </div>
                     <ChevronRight size={18} className="text-slate-700 group-hover:text-white transition-all" />
