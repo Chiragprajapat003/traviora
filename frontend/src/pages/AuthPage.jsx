@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff, ArrowRight, Check } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, ArrowRight, Check, Loader2 } from 'lucide-react';
 import Logo from '../components/Logo';
+import API from '../utils/api';
 
 const slides = [
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop',
@@ -17,15 +18,45 @@ export default function AuthPage() {
   const [mode, setMode] = useState('signup'); // 'signup' | 'login'
   const [showPass, setShowPass] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+
   const [bgIdx] = useState(() => Math.floor(Math.random() * slides.length));
   const navigate = useNavigate();
 
   const isSignup = mode === 'signup';
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (error) setError('');
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Navigate to onboarding after auth
-    navigate('/onboarding');
+    setLoading(true);
+    setError('');
+
+    try {
+      const endpoint = isSignup ? '/auth/register' : '/auth/login';
+      const { data } = await API.post(endpoint, formData);
+      
+      // Save token and user info
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify({ name: data.name, email: data.email }));
+      
+      // Navigate to onboarding if signup, or dashboard if login
+      navigate(isSignup ? '/onboarding' : '/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Authentication failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -93,6 +124,15 @@ export default function AuthPage() {
                   ? 'Your journey begins here. Sign up to stay safe and connected.'
                   : 'Log back in and continue exploring the world with Traviora.'}
               </p>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs text-center"
+                >
+                  {error}
+                </motion.div>
+              )}
             </motion.div>
           </AnimatePresence>
 
@@ -115,8 +155,12 @@ export default function AuthPage() {
                     <User size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                       type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
                       placeholder="e.g. Alex Traveler"
                       className={`${inputClass} pl-10`}
+                      required
                     />
                   </div>
                 </div>
@@ -129,8 +173,12 @@ export default function AuthPage() {
                   <Mail size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="alex@example.com"
                     className={`${inputClass} pl-10`}
+                    required
                   />
                 </div>
               </div>
@@ -142,8 +190,12 @@ export default function AuthPage() {
                   <Lock size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                   <input
                     type={showPass ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     placeholder="••••••••"
                     className={`${inputClass} pl-10 pr-11`}
+                    required
                   />
                   <button
                     type="button"
@@ -195,14 +247,26 @@ export default function AuthPage() {
               {/* Submit button */}
               <motion.button
                 type="submit"
+                disabled={loading || (isSignup && !agreed)}
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative mt-2 w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-semibold text-sm shadow-xl shadow-sky-500/25 hover:shadow-sky-500/40 transition-shadow duration-300 cursor-pointer overflow-hidden group"
+                className={`relative mt-2 w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl font-semibold text-sm shadow-xl transition-all duration-300 cursor-pointer overflow-hidden group
+                  ${loading || (isSignup && !agreed) 
+                    ? 'bg-white/5 text-slate-500 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-sky-500/25 hover:shadow-sky-500/40'}
+                `}
               >
                 {/* Shimmer */}
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                {isSignup ? 'Create Account' : 'Log In'}
-                <ArrowRight size={16} />
+                {!loading && <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />}
+                
+                {loading ? (
+                  <Loader2 className="animate-spin" size={18} />
+                ) : (
+                  <>
+                    {isSignup ? 'Create Account' : 'Log In'}
+                    <ArrowRight size={16} />
+                  </>
+                )}
               </motion.button>
             </motion.form>
           </AnimatePresence>
