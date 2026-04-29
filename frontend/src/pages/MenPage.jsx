@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, Zap, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
   const links = [
     { id: 'dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
     { id: 'trips', icon: <Compass size={20} />, label: 'Trips' },
+    { id: 'map', icon: <Map size={20} />, label: 'Safety Map', to: '/safety-map' },
     { id: 'safety', icon: <ShieldCheck size={20} />, label: 'Safety' },
     { id: 'insights', icon: <Zap size={20} />, label: 'AI Insights' },
     { id: 'archive', icon: <Bookmark size={20} />, label: 'Archive' },
@@ -86,6 +88,12 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
       </div>
 
       <div className="p-4 mt-auto border-t border-slate-800/50">
+        <button 
+          onClick={() => setActiveView('safety')}
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-500 font-bold text-sm hover:bg-rose-500/20 transition-all active:scale-95 mb-4 shadow-lg shadow-rose-500/5 cursor-pointer"
+        >
+          <AlertTriangle size={18} /> SOS EMERGENCY
+        </button>
         <button className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 transition-colors w-full text-sm font-bold">
           <Info size={18} /> Help
         </button>
@@ -97,7 +105,7 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
   );
 }
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SafetyConsole from '../components/SafetyConsole';
 
 function MenDashboard() {
@@ -309,7 +317,15 @@ function MenDashboard() {
 }
 
 export default function MenPage() {
+  const location = useLocation();
   const [view, setView] = useState('dashboard');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('view') === 'safety') {
+      setView('safety');
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen flex bg-[#050b14]">

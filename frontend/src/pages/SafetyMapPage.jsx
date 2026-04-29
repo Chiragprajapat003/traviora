@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Shield, Home, Coffee, LayoutDashboard, Map as MapIcon, Zap, PlusSquare, Utensils, Users, Calendar, AlertTriangle, LocateFixed } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -101,6 +101,7 @@ const mapLocations = [
 ];
 
 function Sidebar() {
+  const navigate = useNavigate();
   const links = [
     { icon: <LayoutDashboard size={20} />, label: 'Dashboard', to: '/dashboard' },
     { icon: <MapIcon size={20} />, label: 'Safety Map', to: '/safety-map', active: true },
@@ -110,6 +111,11 @@ function Sidebar() {
     { icon: <Users size={20} />, label: 'LocalVibe' },
     { icon: <Calendar size={20} />, label: 'Trip Planner' },
   ];
+
+  const handleSOS = () => {
+    const travelerType = localStorage.getItem('travelerType') || 'men';
+    navigate(`/${travelerType === 'family' ? 'family' : travelerType === 'women' ? 'womens' : 'mens'}-hub?view=safety`);
+  };
 
   return (
     <div className="hidden md:flex flex-col fixed left-0 top-16 bottom-0 w-64 bg-[#050b14] border-r border-slate-800/60 z-40 overflow-y-auto">
@@ -153,7 +159,10 @@ function Sidebar() {
 
       {/* SOS Button */}
       <div className="p-6">
-        <button className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-500 font-semibold text-sm hover:bg-rose-500/20 transition-colors cursor-pointer">
+        <button 
+          onClick={handleSOS}
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-500 font-semibold text-sm hover:bg-rose-500/20 transition-colors cursor-pointer"
+        >
           <AlertTriangle size={18} /> SOS EMERGENCY
         </button>
       </div>
@@ -162,6 +171,7 @@ function Sidebar() {
 }
 
 export default function SafetyMapPage() {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('all');
   const [userLocation, setUserLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState([51.505, -0.09]); // Default fallback
@@ -330,6 +340,10 @@ export default function SafetyMapPage() {
         <motion.button 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            const travelerType = localStorage.getItem('travelerType') || 'men';
+            navigate(`/${travelerType === 'family' ? 'family' : travelerType === 'women' ? 'womens' : 'mens'}-hub?view=safety`);
+          }}
           className="absolute bottom-10 right-10 w-20 h-20 bg-rose-500 rounded-full shadow-[0_0_40px_rgba(244,63,94,0.5)] flex items-center justify-center text-white font-black text-xl border-4 border-rose-400/30 hover:bg-rose-600 transition-colors z-20 pointer-events-auto cursor-pointer tracking-wider"
         >
           SOS

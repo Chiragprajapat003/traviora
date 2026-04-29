@@ -19,6 +19,13 @@ function Sidebar() {
     { icon: <Calendar size={20} />, label: 'Trip Planner' },
   ];
 
+  const navigate = useNavigate();
+  const handleSOS = () => {
+    const travelerType = localStorage.getItem('travelerType') || 'men';
+    const hubPath = travelerType === 'family' ? 'family-hub' : travelerType === 'women' ? 'womens-hub' : 'mens-hub';
+    navigate(`/${hubPath}?view=safety`);
+  };
+
   return (
     <div className="hidden md:flex flex-col fixed left-0 top-16 bottom-0 w-64 bg-[#050b14] border-r border-slate-800/60 z-40 overflow-y-auto">
       <div className="p-6 border-b border-slate-800/50">
@@ -55,7 +62,10 @@ function Sidebar() {
       </div>
 
       <div className="p-6">
-        <button className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-500 font-semibold text-sm hover:bg-rose-500/20 transition-colors cursor-pointer">
+        <button 
+          onClick={handleSOS}
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-500 font-semibold text-sm hover:bg-rose-500/20 transition-colors cursor-pointer"
+        >
           <AlertTriangle size={18} /> SOS EMERGENCY
         </button>
       </div>

@@ -30,6 +30,9 @@ export default function OnboardingPage() {
     if (step < TOTAL_STEPS - 1) {
       setStep((s) => s + 1);
     } else {
+      // Persist traveler type for routing and theme purposes
+      localStorage.setItem('travelerType', travelerType);
+      
       if (travelerType === 'women') {
         navigate('/womens-hub');
       } else if (travelerType === 'family') {
