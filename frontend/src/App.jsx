@@ -14,6 +14,9 @@ import AuthPage from './pages/AuthPage';
 import OnboardingPage from './pages/OnboardingPage';
 import DashboardPage from './pages/DashboardPage';
 import SafetyMapPage from './pages/SafetyMapPage';
+import PowerSpotPage from './pages/PowerSpotPage';
+import MediTrustPage from './pages/MediTrustPage';
+import DoctorProfilePage from './pages/DoctorProfilePage';
 
 // Landing page (Home)
 function HomePage() {
@@ -88,6 +91,9 @@ export default function App() {
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/safety-map" element={<SafetyMapPage />} />
+            <Route path="/powerspot" element={<PowerSpotPage />} />
+            <Route path="/meditrust" element={<MediTrustPage />} />
+            <Route path="/meditrust/doctor/:id" element={<DoctorProfilePage />} />
             <Route path="/mens-hub" element={<MenPage />} />
             <Route path="/womens-hub" element={<WomenPage />} />
             <Route path="/family-hub" element={<FamilyPage />} />

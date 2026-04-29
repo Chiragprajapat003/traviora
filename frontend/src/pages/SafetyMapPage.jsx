@@ -104,8 +104,8 @@ function Sidebar() {
   const links = [
     { icon: <LayoutDashboard size={20} />, label: 'Dashboard', to: '/dashboard' },
     { icon: <MapIcon size={20} />, label: 'Safety Map', to: '/safety-map', active: true },
-    { icon: <Zap size={20} />, label: 'PowerSpot' },
-    { icon: <PlusSquare size={20} />, label: 'MediTrust' },
+    { icon: <Zap size={20} />, label: 'PowerSpot', to: '/powerspot' },
+    { icon: <PlusSquare size={20} />, label: 'MediTrust', to: '/meditrust' },
     { icon: <Utensils size={20} />, label: 'MenuLens' },
     { icon: <Users size={20} />, label: 'LocalVibe' },
     { icon: <Calendar size={20} />, label: 'Trip Planner' },
