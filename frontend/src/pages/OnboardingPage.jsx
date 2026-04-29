@@ -32,6 +32,8 @@ export default function OnboardingPage() {
     } else {
       if (travelerType === 'women') {
         navigate('/womens-hub');
+      } else if (travelerType === 'family') {
+        navigate('/family-hub');
       } else {
         navigate('/mens-hub');
       }
