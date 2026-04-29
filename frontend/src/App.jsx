@@ -8,6 +8,7 @@ import CTA from './components/CTA';
 import Footer from './components/Footer';
 import PlaceholderPage from './pages/PlaceholderPage';
 import MenPage from './pages/MenPage';
+import WomenPage from './pages/WomenPage';
 import AuthPage from './pages/AuthPage';
 import OnboardingPage from './pages/OnboardingPage';
 
@@ -83,6 +84,7 @@ export default function App() {
             <Route path="/get-started" element={<AuthPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/mens-hub" element={<MenPage />} />
+            <Route path="/womens-hub" element={<WomenPage />} />
             <Route path="/safety" element={<SafetyPage />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/pricing" element={<PricingPage />} />
