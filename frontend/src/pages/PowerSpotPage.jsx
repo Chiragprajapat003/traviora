@@ -14,7 +14,7 @@ function Sidebar() {
     { icon: <Zap size={20} />, label: 'PowerSpot', to: '/powerspot', active: true },
     { icon: <PlusSquare size={20} />, label: 'MediTrust', to: '/meditrust' },
     { icon: <Utensils size={20} />, label: 'MenuLens', to: '/menulens' },
-    { icon: <Users size={20} />, label: 'LocalVibe' },
+    { icon: <Users size={20} />, label: 'LocalVibe', to: '/localvibe' },
     { icon: <Calendar size={20} />, label: 'Trip Planner' },
   ];
 
