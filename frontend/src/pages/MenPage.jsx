@@ -1,22 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, Zap, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import SafetyConsole from '../components/SafetyConsole';
 
 function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
   const links = [
     { id: 'dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
-    { id: 'trips', icon: <Compass size={20} />, label: 'Trips' },
     { id: 'map', icon: <Map size={20} />, label: 'Safety Map', to: '/safety-map' },
     { id: 'menulens', icon: <Utensils size={20} />, label: 'MenuLens', to: '/menulens' },
     { id: 'localvibe', icon: <Users size={20} />, label: 'LocalVibe', to: '/localvibe' },
     { id: 'safety', icon: <ShieldCheck size={20} />, label: 'Safety' },
-    { id: 'insights', icon: <Zap size={20} />, label: 'AI Insights' },
-    { id: 'archive', icon: <Bookmark size={20} />, label: 'Archive' },
     { id: 'meditrust', icon: <PlusSquare size={20} />, label: 'MediTrust', to: '/meditrust' },
     { id: 'powerspot', icon: <Compass size={20} />, label: 'PowerSpot', to: '/powerspot' },
-    { id: 'planner', icon: <Calendar size={20} />, label: 'Trip Planner', to: '/trip-planner' },
   ];
 
   const activeColors = {
@@ -41,16 +37,14 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
             <ShieldCheck size={24} className="text-white" />
           </div>
           <div>
-            <div className="text-white font-bold text-lg tracking-tight">AURA AI</div>
+            <div className="text-white font-bold text-lg tracking-tight">TRAVIORA AI</div>
             <div className="text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Systems Nominal
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Hub Connected
             </div>
           </div>
         </div>
 
-        <button className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 transition-all active:scale-95 text-sm">
-          New Trip
-        </button>
+
       </div>
 
       <div className="flex-1 px-3 flex flex-col gap-1">
