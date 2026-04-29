@@ -8,6 +8,7 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
     { id: 'dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
     { id: 'trips', icon: <Compass size={20} />, label: 'Trips' },
     { id: 'map', icon: <Map size={20} />, label: 'Safety Map', to: '/safety-map' },
+    { id: 'menulens', icon: <Utensils size={20} />, label: 'MenuLens', to: '/menulens' },
     { id: 'safety', icon: <ShieldCheck size={20} />, label: 'Safety' },
     { id: 'insights', icon: <Zap size={20} />, label: 'AI Insights' },
     { id: 'archive', icon: <Bookmark size={20} />, label: 'Archive' },
