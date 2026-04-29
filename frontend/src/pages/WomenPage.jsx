@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, Zap, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
 
 function Sidebar() {
   const links = [
-    { icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
-    { icon: <Map size={20} />, label: 'Safety Map' },
+    { icon: <LayoutDashboard size={20} />, label: 'Dashboard', to: '/dashboard' },
+    { icon: <Map size={20} />, label: 'Safety Map', to: '/safety-map' },
     { icon: <Zap size={20} />, label: 'PowerSpot' },
     { icon: <PlusSquare size={20} />, label: 'MediTrust' },
     { icon: <Utensils size={20} />, label: 'MenuLens' },
@@ -34,18 +35,22 @@ function Sidebar() {
 
       {/* Nav Links */}
       <div className="flex-1 py-6 flex flex-col gap-1 px-3">
-        {links.map((link) => (
-          <button 
-            key={link.label}
-            className={`flex items-center gap-3 px-4 py-3 transition-colors w-full cursor-pointer
-              ${link.active 
-                ? 'bg-pink-500/10 text-pink-500 relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pink-500 before:rounded-r-md' 
-                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5 rounded-xl'}`}
-          >
-            {link.icon}
-            <span className="font-medium text-sm">{link.label}</span>
-          </button>
-        ))}
+        {links.map((link) => {
+          const Wrapper = link.to ? Link : 'button';
+          return (
+            <Wrapper 
+              key={link.label}
+              to={link.to}
+              className={`flex items-center gap-3 px-4 py-3 transition-colors w-full cursor-pointer text-left
+                ${link.active 
+                  ? 'bg-pink-500/10 text-pink-500 relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pink-500 before:rounded-r-md' 
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-white/5 rounded-xl'}`}
+            >
+              {link.icon}
+              <span className="font-medium text-sm">{link.label}</span>
+            </Wrapper>
+          );
+        })}
       </div>
 
       {/* SOS Button */}

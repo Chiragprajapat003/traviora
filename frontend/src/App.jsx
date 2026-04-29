@@ -12,6 +12,8 @@ import WomenPage from './pages/WomenPage';
 import FamilyPage from './pages/FamilyPage';
 import AuthPage from './pages/AuthPage';
 import OnboardingPage from './pages/OnboardingPage';
+import DashboardPage from './pages/DashboardPage';
+import SafetyMapPage from './pages/SafetyMapPage';
 
 // Landing page (Home)
 function HomePage() {
@@ -84,6 +86,8 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/get-started" element={<AuthPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/safety-map" element={<SafetyMapPage />} />
             <Route path="/mens-hub" element={<MenPage />} />
             <Route path="/womens-hub" element={<WomenPage />} />
             <Route path="/family-hub" element={<FamilyPage />} />
