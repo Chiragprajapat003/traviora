@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Menu, X } from 'lucide-react';
+import { User, Menu, X, Bell, Shield } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 
 const navLinks = [
-  { label: 'Destinations', to: '/destinations' },
+  { label: 'Men\'s Hub', to: '/mens-hub' },
   { label: 'Safety', to: '/safety' },
   { label: 'Community', to: '/community' },
   { label: 'Pricing', to: '/pricing' },
@@ -27,6 +27,25 @@ export default function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  if (location.pathname === '/mens-hub') {
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050b14] border-b border-slate-800/60 h-16 flex items-center justify-between px-6 lg:px-8">
+        <Logo />
+        <div className="flex items-center gap-6 text-slate-400">
+          <button className="hover:text-white transition-colors cursor-pointer">
+            <Bell size={20} />
+          </button>
+          <button className="hover:text-white transition-colors cursor-pointer">
+            <Shield size={20} />
+          </button>
+          <button className="rounded-full overflow-hidden ring-2 ring-transparent hover:ring-slate-700 transition-all w-8 h-8 cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" alt="User Avatar" className="w-full h-full object-cover" />
+          </button>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <motion.nav
