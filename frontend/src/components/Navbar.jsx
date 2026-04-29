@@ -36,8 +36,17 @@ export default function Navbar() {
           <button className="hover:text-white transition-colors cursor-pointer">
             <Bell size={20} />
           </button>
-          <button className="hover:text-white transition-colors cursor-pointer">
-            <Shield size={20} />
+          <button 
+            onClick={() => {
+              const travelerType = localStorage.getItem('travelerType') || 'men';
+              const hubPath = travelerType === 'family' ? 'family-hub' : travelerType === 'women' ? 'womens-hub' : 'mens-hub';
+              navigate(`/${hubPath}?view=safety`);
+            }}
+            className="hover:text-rose-500 transition-colors cursor-pointer flex items-center gap-1 group"
+            title="Emergency SOS"
+          >
+            <Shield size={20} className="group-hover:scale-110 transition-transform" />
+            <span className="text-[10px] font-bold text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">SOS</span>
           </button>
           <button className="rounded-full overflow-hidden ring-2 ring-transparent hover:ring-slate-700 transition-all w-8 h-8 cursor-pointer">
             <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" alt="User Avatar" className="w-full h-full object-cover" />
