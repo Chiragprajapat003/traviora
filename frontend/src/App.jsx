@@ -17,6 +17,7 @@ import SafetyMapPage from './pages/SafetyMapPage';
 import PowerSpotPage from './pages/PowerSpotPage';
 import MediTrustPage from './pages/MediTrustPage';
 import DoctorProfilePage from './pages/DoctorProfilePage';
+import MenuLensPage from './pages/MenuLensPage';
 
 // Landing page (Home)
 function HomePage() {
@@ -94,6 +95,7 @@ export default function App() {
             <Route path="/powerspot" element={<PowerSpotPage />} />
             <Route path="/meditrust" element={<MediTrustPage />} />
             <Route path="/meditrust/doctor/:id" element={<DoctorProfilePage />} />
+            <Route path="/menulens" element={<MenuLensPage />} />
             <Route path="/mens-hub" element={<MenPage />} />
             <Route path="/womens-hub" element={<WomenPage />} />
             <Route path="/family-hub" element={<FamilyPage />} />

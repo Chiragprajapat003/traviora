@@ -13,7 +13,7 @@ function Sidebar() {
     { icon: <MapIcon size={20} />, label: 'Safety Map', to: '/safety-map' },
     { icon: <Zap size={20} />, label: 'PowerSpot', to: '/powerspot', active: true },
     { icon: <PlusSquare size={20} />, label: 'MediTrust', to: '/meditrust' },
-    { icon: <Utensils size={20} />, label: 'MenuLens' },
+    { icon: <Utensils size={20} />, label: 'MenuLens', to: '/menulens' },
     { icon: <Users size={20} />, label: 'LocalVibe' },
     { icon: <Calendar size={20} />, label: 'Trip Planner' },
   ];
