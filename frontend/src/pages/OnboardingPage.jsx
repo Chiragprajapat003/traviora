@@ -30,7 +30,11 @@ export default function OnboardingPage() {
     if (step < TOTAL_STEPS - 1) {
       setStep((s) => s + 1);
     } else {
-      navigate('/mens-hub');
+      if (travelerType === 'women') {
+        navigate('/womens-hub');
+      } else {
+        navigate('/mens-hub');
+      }
     }
   };
 
