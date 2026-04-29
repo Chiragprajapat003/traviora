@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 
 const navLinks = [
-  { label: 'Men\'s Hub', to: '/mens-hub' },
+  { label: 'Dashboards', to: '/dashboard' },
   { label: 'Safety', to: '/safety' },
   { label: 'Community', to: '/community' },
   { label: 'Pricing', to: '/pricing' },
@@ -28,7 +28,7 @@ export default function Navbar() {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  if (location.pathname === '/mens-hub' || location.pathname === '/womens-hub' || location.pathname === '/family-hub') {
+  if (location.pathname === '/mens-hub' || location.pathname === '/womens-hub' || location.pathname === '/family-hub' || location.pathname === '/safety-map') {
     return (
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050b14] border-b border-slate-800/60 h-16 flex items-center justify-between px-6 lg:px-8">
         <Logo />
