@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Block sensitive paths
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+
+# Link to your sitemap
+Sitemap: https://traviora.vercel.app/sitemap.xml

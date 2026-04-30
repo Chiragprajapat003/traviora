@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { User, Users, Shield, ArrowRight } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const dashboards = [
   {

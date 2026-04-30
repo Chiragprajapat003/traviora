@@ -48,12 +48,21 @@ export default function Navbar() {
             <Shield size={20} className="group-hover:scale-110 transition-transform" />
             <span className="text-[10px] font-bold text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity">SOS</span>
           </button>
-          <Link to="/profile" className="rounded-full overflow-hidden ring-2 ring-transparent hover:ring-slate-700 transition-all w-8 h-8 cursor-pointer">
-            <img 
-              src={JSON.parse(localStorage.getItem('user'))?.profilePicture || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop"} 
-              alt="User Avatar" 
-              className="w-full h-full object-cover" 
-            />
+          <Link to="/profile" className="rounded-full overflow-hidden ring-2 ring-transparent hover:ring-slate-700 transition-all w-8 h-8 cursor-pointer bg-slate-800 flex items-center justify-center">
+            {(() => {
+              try {
+                const userRaw = localStorage.getItem('user');
+                if (!userRaw) return <User size={14} className="text-slate-400" />;
+                
+                const user = JSON.parse(userRaw);
+                if (typeof user === 'object' && user?.profilePicture) {
+                  return <img src={user.profilePicture} alt="User Avatar" className="w-full h-full object-cover" />;
+                }
+                return <User size={14} className="text-slate-400" />;
+              } catch (e) {
+                return <User size={14} className="text-slate-400" />;
+              }
+            })()}
           </Link>
         </div>
       </nav>
@@ -113,9 +122,22 @@ export default function Navbar() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => navigate('/profile')}
-                  className="w-9 h-9 rounded-full glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="w-9 h-9 rounded-full overflow-hidden border border-white/10 hover:border-sky-500/50 transition-all cursor-pointer"
                 >
-                  <User size={16} />
+                  {(() => {
+                    try {
+                      const userRaw = localStorage.getItem('user');
+                      if (!userRaw) return <div className="w-full h-full glass flex items-center justify-center text-slate-400"><User size={16} /></div>;
+                      
+                      const user = JSON.parse(userRaw);
+                      if (typeof user === 'object' && user?.profilePicture) {
+                        return <img src={user.profilePicture} alt="User" className="w-full h-full object-cover" />;
+                      }
+                      return <div className="w-full h-full glass flex items-center justify-center text-slate-400"><User size={16} /></div>;
+                    } catch (e) {
+                      return <div className="w-full h-full glass flex items-center justify-center text-slate-400"><User size={16} /></div>;
+                    }
+                  })()}
                 </motion.button>
               </div>
             )}
