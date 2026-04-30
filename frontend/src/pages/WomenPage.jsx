@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { User, ShieldCheck, Users, Compass, Bookmark, Star, Info, MessageSquare, ArrowRight, LayoutDashboard, Map, PlusSquare, Utensils, Calendar, AlertTriangle } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import SafetyConsole from '../components/SafetyConsole';
+import SEO from '../components/SEO';
 
 function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
   const navigate = useNavigate();
@@ -52,8 +53,21 @@ function Sidebar({ hubColor = 'emerald', activeView, setActiveView }) {
     <div className="hidden md:flex flex-col fixed left-0 top-16 bottom-0 w-64 bg-[#050b14] border-r border-slate-800/60 z-40 overflow-y-auto">
       <div className="p-6 mb-2">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <ShieldCheck size={24} className="text-white" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg ring-2 ring-white/5 group-hover:ring-pink-500/50 transition-all">
+            {(() => {
+              try {
+                const userRaw = localStorage.getItem('user');
+                if (!userRaw) return <div className="w-full h-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><User size={20} className="text-white" /></div>;
+                
+                const user = JSON.parse(userRaw);
+                if (typeof user === 'object' && user?.profilePicture) {
+                  return <img src={user.profilePicture} alt="User" className="w-full h-full object-cover" />;
+                }
+                return <div className="w-full h-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><User size={20} className="text-white" /></div>;
+              } catch (e) {
+                return <div className="w-full h-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center"><User size={20} className="text-white" /></div>;
+              }
+            })()}
           </div>
           <div>
             <div className="text-white font-bold text-lg tracking-tight uppercase">{userName}</div>
@@ -349,6 +363,12 @@ export default function WomenPage() {
 
   return (
     <div className="min-h-screen flex bg-[#050b14]">
+      <SEO 
+        title="Women's Safe Travel Hub" 
+        description="Empowering solo female travelers with safe destination guides, community-verified reviews, and real-time safety metrics."
+        keywords="solo female travel, women travel safety, safe solo travel for women, verified travel destinations"
+        url="/womens-hub"
+      />
       <Sidebar hubColor="pink" activeView={view} setActiveView={setView} />
       <div className="flex-1 ml-0 md:ml-64 pt-24 px-8 lg:px-12 pb-16 overflow-y-auto">
         <AnimatePresence mode="wait">
