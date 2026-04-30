@@ -36,6 +36,7 @@ export const registerUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        profilePicture: user.profilePicture,
         token: generateToken(user._id),
       });
     } else {
@@ -60,6 +61,7 @@ export const loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        profilePicture: user.profilePicture,
         token: generateToken(user._id),
       });
     } else {
@@ -81,6 +83,7 @@ export const getUserProfile = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      profilePicture: user.profilePicture,
       profile: user.profile,
     });
   } else {
@@ -92,23 +95,32 @@ export const getUserProfile = async (req, res) => {
 // @route   PUT /api/auth/profile
 // @access  Private
 export const updateUserProfile = async (req, res) => {
-  const user = await User.findById(req.user._id);
+  try {
+    const user = await User.findById(req.user._id);
 
-  if (user) {
-    user.profile.ageGroup = req.body.ageGroup || user.profile.ageGroup;
-    user.profile.travelerType = req.body.travelerType || user.profile.travelerType;
-    user.profile.travelStyles = req.body.travelStyles || user.profile.travelStyles;
+    if (user) {
+      // Basic Info
+      user.name = req.body.name || user.name;
+      user.profilePicture = req.body.profilePicture || user.profilePicture;
 
-    const updatedUser = await user.save();
+      // Profile Preferences
+      if (req.body.ageGroup) user.profile.ageGroup = req.body.ageGroup;
+      if (req.body.travelerType) user.profile.travelerType = req.body.travelerType;
+      if (req.body.travelStyles) user.profile.travelStyles = req.body.travelStyles;
 
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      profile: updatedUser.profile,
-      token: generateToken(updatedUser._id),
-    });
-  } else {
-    res.status(404).json({ message: 'User not found' });
+      const updatedUser = await user.save();
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        profilePicture: updatedUser.profilePicture,
+        profile: updatedUser.profile,
+      });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
