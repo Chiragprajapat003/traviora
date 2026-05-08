@@ -18,6 +18,8 @@
 <p align="center">
   <a href="https://traviora-mu.vercel.app/"><strong>🌐 Live Demo</strong></a> ·
   <a href="https://traviora-eltm.onrender.com/"><strong>⚙️ API Documentation</strong></a> ·
+  <a href="https://youtu.be/PWAoM_ZNa-c?si=u0rsxavuuUojfXTS"><strong>▶️ YouTube Demo</strong></a> ·
+  <a href="https://www.figma.com/design/OQwbFNggqCJZdl7C6mybOS/figma?node-id=5691-2&t=En3TKc6rHqFN2UlD-1"><strong>🎨 Figma Prototype</strong></a> ·
   <a href="#-key-features"><strong>Features</strong></a> ·
   <a href="#-local-development"><strong>Setup Guide</strong></a> ·
   <a href="#-architecture"><strong>Architecture</strong></a>
@@ -44,6 +46,8 @@
 ### 🔗 Quick Links
 - **Production Frontend:** [traviora-mu.vercel.app](https://traviora-mu.vercel.app/)
 - **Production Backend:** [traviora-eltm.onrender.com](https://traviora-eltm.onrender.com/)
+- **▶️ YouTube Demo:** [Watch the project demo on YouTube](https://youtu.be/PWAoM_ZNa-c?si=u0rsxavuuUojfXTS)
+- **🎨 Figma Prototype:** [View the UI/UX design on Figma](https://www.figma.com/design/OQwbFNggqCJZdl7C6mybOS/figma?node-id=5691-2&t=En3TKc6rHqFN2UlD-1)
 
 ---
 
